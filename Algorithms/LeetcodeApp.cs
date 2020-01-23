@@ -19,6 +19,7 @@ namespace Algorithms
 
     public class LeetcodeApp
     {
+        //this doesn't work
         public static int WaysToNavigateMaze(int[,] maze, int r, int c)
         {
             if (r == 0 || c == 0)
