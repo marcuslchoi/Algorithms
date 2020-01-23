@@ -87,7 +87,7 @@ namespace Algorithms
 
             Debug.WriteLine("kth: " + LeetcodeApp.KthGrammar(4,1));
 
-            var str = "aeifjlkjasdytvka";
+            var str = "aeifjlkjaasdfsdytvka";
             Debug.WriteLine("longest substring of "+str+": "+LeetcodeApp.LengthOfLongestSubstring(str));
 
             var list1 = new DoublyLinkedList(4);
