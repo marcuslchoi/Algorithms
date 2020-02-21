@@ -97,11 +97,17 @@ namespace Algorithms
                 theList.Add(currentNode.Data);
                 currentNode = currentNode.Next;
             }
+            Debug.WriteLine("printing linked list");
             foreach (var val in theList)
             {
                 Debug.Write(val + ", ");
             }
             Debug.WriteLine(" ");
+        }
+
+        public void PrintHeadAndTailVals()
+        {
+            Debug.WriteLine("Head, Tail: " + this.Head.Data + ", " + this.Tail.Data);
         }
 
         public void Insert(int index, int val)
@@ -183,16 +189,48 @@ namespace Algorithms
             this.Length--;
         }
 
-        //todo: another way
-        public void Reverse()
+        //recursive
+        //https://www.youtube.com/watch?v=K7J3nCeRC80&list=PL2_aWCzGMAwI3W_JlcBbtYTwiQSsOTa6P&index=10
+        public void ReversePrintR(Node node)
         {
-            for (int i = this.Length - 1; i >= 1; i--)
+            if (node == null)
             {
-                var currentNode = this.GetNode(i);
-                var prevNode = this.GetNode(i - 1);
-                currentNode.Next = prevNode;
+                return;
+            }
+            this.ReversePrintR(node.Next);
+            Debug.WriteLine("reverse print: " + node.Data);
+        }
+
+        //recursive
+        //https://www.youtube.com/watch?v=KYH83T4q6Vs
+        public void ReverseR(Node p)
+        {
+            //old tail becomes head
+            //if (p.Next == null) //if tail is not set
+            if(p == this.Tail)
+            {
+                this.Head = p;
+                return;
             }
 
+            this.ReverseR(p.Next);
+            var q = p.Next;
+            q.Next = p;
+            p.Next = null; //p is the new temp tail
+            this.Tail = p; //optional
+        }
+
+        public void Reverse()
+        {
+            //go in reverse, make current point to previous
+            for (int i = this.Length - 1; i > 0; i--)
+            {
+                var curr = this.GetNode(i);
+                var prev = this.GetNode(i - 1);
+                curr.Next = prev;
+            }
+
+            //swap head and tail, make sure tail's next is null
             var oldHead = this.Head;
             this.Head = this.Tail;
             this.Tail = oldHead;

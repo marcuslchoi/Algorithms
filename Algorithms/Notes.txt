@@ -1,0 +1,13 @@
+﻿stack vs heap:
+
+Stack is used for static memory allocation and Heap for dynamic memory allocation,
+both stored in the computer's RAM .
+Variables allocated on the stack are stored directly to the memory
+and access to this memory is very fast, and it's allocation is
+dealt with when the program is compiled.
+http://net-informations.com/faq/net/stack-heap.htm
+
+struct vs class:
+
+struct is value type, class is reference type.
+Structs stored on stack, classes on heap

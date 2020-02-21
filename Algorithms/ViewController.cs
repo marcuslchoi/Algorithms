@@ -146,6 +146,9 @@ namespace Algorithms
             list.Append(3);
             list.Append(5);
             list.Append(7);
+            list.ReverseR(list.Head);
+            list.PrintList();
+            list.PrintHeadAndTailVals();
             var node = LeetcodeApp.FindKthToLastNode(list, 4);
 
             var r = 5;
