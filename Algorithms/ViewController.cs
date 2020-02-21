@@ -13,7 +13,7 @@ namespace Algorithms
         {
         }
 
-        public void TreeStuff()
+        public void DoTreeStuff()
         {
             var tree = new BinarySearchTree();
             tree.Insert(9);
@@ -23,6 +23,12 @@ namespace Algorithms
             tree.Insert(170);
             tree.Insert(15);
             tree.Insert(1);
+
+            for (int i = 0; i < 10; i++)
+            {
+                TreeNode randomNode = tree.GetRandomNode2();
+                Debug.WriteLine("random tree node: "+randomNode.Data);
+            }
 
             Debug.WriteLine(tree.MaxDepth(tree.root));
             //tree.Insert(100);
@@ -65,9 +71,75 @@ namespace Algorithms
 
         }
 
+        public void DoShortestPathBBB16()
+        {
+            var graph = new Graph();
+            graph.AddVertex(1);
+            graph.AddVertex(2);
+            graph.AddVertex(3);
+            graph.AddVertex(4);
+            graph.AddVertex(5);
+            graph.AddVertex(6);
+            graph.AddVertex(7);
+            graph.AddVertex(8);
+            graph.AddVertex(9);
+            graph.AddDirectedEdge(1, 2);
+            graph.AddDirectedEdge(2,3);
+            graph.AddDirectedEdge(3,4);
+            graph.AddDirectedEdge(4,1);
+            graph.AddDirectedEdge(4,5);
+            graph.AddDirectedEdge(5,1);
+            graph.AddDirectedEdge(3,6);
+            graph.AddDirectedEdge(6,7);
+            graph.AddDirectedEdge(7,4);
+            graph.AddDirectedEdge(6,8);
+            graph.AddDirectedEdge(8,9);
+            var path = LeetcodeApp.GetShortestPath(graph, 3, 1);
+
+        }
+
+        private void DoKthMostFrequentString()
+        {
+            var list = new List<string>() { "a", "b", "c", "a", "b", "a" };
+            var ans = LeetcodeApp.KthMostFrequentString(list, 0);
+
+        }
+
         public override void ViewDidLoad()
         {
             base.ViewDidLoad();
+
+            DoKthMostFrequentString();
+            //DoShortestPathBBB16();
+
+            var graph = new Graph();
+            graph.AddVertex(0);
+            graph.AddVertex(1);
+            graph.AddVertex(2);
+            graph.AddVertex(3);
+            graph.AddVertex(4);
+            graph.AddVertex(5);
+            graph.AddVertex(6);
+            graph.AddUndirectedEdge(0, 1);
+            graph.AddUndirectedEdge(0, 2);
+            graph.AddUndirectedEdge(1,3);
+            graph.AddUndirectedEdge(1, 2);
+            graph.AddUndirectedEdge(2,4);
+            graph.AddUndirectedEdge(3,4);
+            graph.AddUndirectedEdge(4,5);
+            graph.AddUndirectedEdge(5,6);
+
+            var arrMagic = new int[] {-10,-5,-2,0,1,2,2,3,4,7,8,9,10,11,12,13};
+            var magicIndex = LeetcodeApp.GetMagicIndexDups(arrMagic);
+            var consecutiveCount = LeetcodeApp.ConsecutiveArray(arrMagic);
+
+            var arr1 = new int[] { 2, 4, 6 };
+            var arr2 = new int[] { 1,3,5 };
+            var median = LeetcodeApp.GetMedianOfArrays(arr1, arr2);
+
+            var array2D = new int[,] { { -1, 2,3 }, { 4,5,-6}, { 7,8,9 } };
+            var maxProd = LeetcodeApp.MaxProduct(array2D,3,3);
+
             var leet = new LeetcodeApp();
             var list = new DoublyLinkedList(1);
             list.Append(2);
@@ -76,10 +148,13 @@ namespace Algorithms
             list.Append(7);
             var node = LeetcodeApp.FindKthToLastNode(list, 4);
 
-            var r = 2;
-            var c = 3;
-            var maze = new int[2, 3] { { 1,2,3},{4,5,6 }};
+            var r = 5;
+            var c = 5;
+            var maze = new int[5, 5];// { { 1,2,3,4,5},{4,5,6,7,8 }};
             var numways = LeetcodeApp.WaysToNavigateMaze(maze, r, c);
+
+            //var a = new List<int> { 1, 2, 3 ,4, 5, -43,1,-5,-3,4,2};
+            //var subsets = LeetcodeApp.GetAllSubsets(a, 0);
 
             //var permutations = leet.Permute(new int[] { 1, 2, 3 }, null);
             var perms = leet.GetPerms("123");
@@ -119,7 +194,7 @@ namespace Algorithms
             //{
             //    Debug.WriteLine(num);
             //}
-            TreeStuff();
+            DoTreeStuff();
         }
 
         public override NSObject RepresentedObject

@@ -10,6 +10,7 @@ namespace Algorithms
     public class BinarySearchTree
     {
         public TreeNode root;
+        public int NodeCount { get; private set; }
 
         public void Remove(int val)
         {
@@ -17,7 +18,7 @@ namespace Algorithms
             //get current node and parent node
             var currentNode = this.root;
             TreeNode parentNode = null;
-            while (true)
+            while (currentNode != null)
             {
                 bool smaller = currentNode.Data > val;
                 bool bigger = currentNode.Data < val;
@@ -38,6 +39,14 @@ namespace Algorithms
                     break;
                 }
             }
+
+            if (currentNode == null)
+            {
+                Debug.WriteLine("Remove() error: node is not in tree! " + val);
+                return;
+            }
+
+            this.NodeCount++;
 
             bool hasLeftChild = currentNode.Left != null;
             bool hasRightChild = currentNode.Right != null;
@@ -174,11 +183,61 @@ namespace Algorithms
                     }
                     else
                     {
-                        //node already exists!!
-                        break;
+                        Debug.WriteLine("not adding node because it already exists: " + val);
+                        return;
                     }
                 }
             }
+            this.NodeCount++;
+        }
+
+        //BBB #17 get a random node
+        //put all nodes in an array, get random index
+        //high space complexity
+        public TreeNode GetRandomNode()
+        {
+            var list = new List<TreeNode>();
+            var queue = new Queue<TreeNode>();
+            queue.Enqueue(this.root);
+
+            while (queue.Count > 0)
+            {
+                var curr = queue.Dequeue();
+                list.Add(curr);
+                if (curr.Left != null)
+                    queue.Enqueue(curr.Left);
+                if (curr.Right != null)
+                    queue.Enqueue(curr.Right);
+            }
+            var r = new Random();
+            var randomIndex = r.Next(0, list.Count);
+            return list[randomIndex];
+        }
+
+        //use NodeCount to get random index
+        public TreeNode GetRandomNode2()
+        {
+            var r = new Random();
+            var randomIndex = r.Next(0, this.NodeCount);
+
+            var queue = new Queue<TreeNode>();
+            queue.Enqueue(this.root);
+
+            int count = 0;
+            while (queue.Count > 0)
+            {
+                var curr = queue.Dequeue();
+                if (randomIndex == count)
+                    return curr;
+                else
+                    count++;
+
+                if (curr.Left != null)
+                    queue.Enqueue(curr.Left);
+                if (curr.Right != null)
+                    queue.Enqueue(curr.Right);
+            }
+            return null;
         }
 
         public TreeNode Lookup(int val)

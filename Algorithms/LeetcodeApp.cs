@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace Algorithms
@@ -19,19 +20,358 @@ namespace Algorithms
 
     public class LeetcodeApp
     {
-        //this doesn't work
-        public static int WaysToNavigateMaze(int[,] maze, int r, int c)
+        //#30 BBB
+        //determine if a linked list is a palindrome
+        //i.e., 1 -> 2 -> 3 -> 2 -> 1 is true
+        public static bool IsPalindrome(LinkedList<int> list)
         {
-            if (r == 0 || c == 0)
+            var numList = new List<int>();
+            LinkedListNode<int> currNode = list.First;
+            while (currNode != null)
             {
-                return 0;
+                numList.Add(currNode.Value);
+                currNode = currNode.Next;
             }
 
-            int lastIndexR = r - 1;
-            int lastIndexC = c - 1;
+            //2 pointers
+            int low = 0; int high = numList.Count - 1;
+            while (low < high)
+            {
+                if (numList[low] == numList[high])
+                {
+                    low++; high--;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
 
-            int ways = WaysToNavigateMaze(maze, lastIndexR - 1, lastIndexC) +
-                WaysToNavigateMaze(maze, lastIndexR, lastIndexC - 1);
+        //#51 BBB
+        public static string KthMostFrequentString(List<string> list, int k)
+        {
+            var dict = new Dictionary<string, int>(); //string, count
+            foreach (var str in list)
+            {
+                if (dict.ContainsKey(str))
+                    dict[str]++;
+                else
+                    dict.Add(str, 1);
+            }
+
+            var freqList = new List<int>();
+            foreach (KeyValuePair<string, int> entry in dict)
+            {
+                freqList.Add(entry.Value);
+            }
+            freqList.Sort();
+            freqList.Reverse();
+
+            int freqToFind = freqList.Count > k? freqList[k]: -1;
+            if (freqToFind != -1)
+            {
+                foreach (KeyValuePair<string, int> entry in dict)
+                {
+                    if (entry.Value == freqToFind)
+                    {
+                        return entry.Key;
+                    }
+                }
+            }
+            return null;
+        }
+
+        //#16 BBB
+        //shortest path between nodes in directed graph
+        public static List<int> GetShortestPath(Graph graph, int nodeStart, int nodeEnd)
+        {
+            //base case
+            var adjList = graph.AdjacentList;
+            if (adjList[nodeStart].Contains(nodeEnd))
+            {
+                return new List<int> { nodeStart, nodeEnd };
+            }
+
+            List<int> shortestPath = null;
+            foreach (var node in adjList[nodeStart])
+            {
+                var currPath = new List<int> { nodeStart };
+                currPath.AddRange(GetShortestPath(graph, node, nodeEnd));
+                if (shortestPath == null || currPath.Count < shortestPath.Count)
+                {
+                    shortestPath = currPath;
+                }
+            }
+            return shortestPath;
+        }
+
+        //#5 BBB
+        //find length of longest consecutive numbers
+        public static int ConsecutiveArray(int[] arr)
+        {
+            var set = new HashSet<int>();
+            foreach (var num in arr)
+            {
+                if(!set.Contains(num))
+                    set.Add(num);
+            }
+
+            int currentCount = 1;
+            foreach (var num in set)
+            {
+                int count = 1 + GetConsecutiveCount(set, num, true) + GetConsecutiveCount(set, num, false);
+                if (count > currentCount)
+                    currentCount = count;
+            }
+            return currentCount;
+        }
+
+        static int GetConsecutiveCount(HashSet<int> set, int num, bool searchAbove)
+        {
+            bool found = true;
+            int count = 0;
+            while (found)
+            {
+                if (searchAbove)
+                    num++;
+                else
+                    num--;
+
+                if (set.Contains(num))
+                {
+                    count++;
+                }
+                else
+                {
+                    found = false;
+                }
+            }
+            return count;
+        }
+
+        public static int MaxProduct(int[,] maze, int rows, int cols)
+        {
+            if (rows == 1)
+            {
+                int product = 1;
+                for (int i = 0; i < cols; i++)
+                {
+                    product *= maze[0, i];
+                }
+                return product;
+            }
+            else if (cols == 1)
+            {
+                int product = 1;
+                for (int i = 0; i < rows; i++)
+                {
+                    product *= maze[i, 0];
+                }
+                return product;
+            }
+
+            int bottomRight = maze[rows - 1, cols - 1];
+            int maxRemoveRow = MaxProduct(maze, rows - 1, cols);
+            int maxRemoveCol = MaxProduct(maze, rows, cols - 1);
+            if (bottomRight < 0)
+            {
+                if (maxRemoveRow < 0)
+                {
+                    maxRemoveRow = -maxRemoveRow;
+                }
+                if (maxRemoveCol < 0)
+                {
+                    maxRemoveCol = -maxRemoveCol;
+                }
+            }
+
+            int maxProduct = Math.Max(maxRemoveCol, maxRemoveRow);
+            maxProduct *= bottomRight;
+            return maxProduct;
+        }
+
+        //assume same length of arrays, sorted
+        public static double GetMedianOfArrays(int[] arr1, int[] arr2)
+        {
+            double med1 = GetMedian(arr1);
+            double med2 = GetMedian(arr2);
+
+            var len1 = arr1.Length;
+            var len2 = arr2.Length;
+
+            //base case
+            if (len1 == 2) // || len2 == 2)
+            {
+                var first = Math.Max(arr1[0], arr2[0]);
+                var second = Math.Min(arr1[1], arr2[1]);
+                return first + second / 2d;
+            }
+
+            int[] subArr1;
+            int[] subArr2;
+            if (med1 == med2) { return med1; }
+            else if (med1 < med2)
+            {
+                //take bigger part of arr1, smaller part of arr2
+                //must take 1 more than half the size
+                subArr1 = arr1.ToList().GetRange(len1 / 2 - 1, len1 / 2 + 1).ToArray();
+                subArr2 = arr2.ToList().GetRange(0, len2 / 2+1).ToArray();
+            }
+            else
+            {
+                subArr1 = arr1.ToList().GetRange(0, len1/2+1).ToArray();
+                subArr2 = arr2.ToList().GetRange(len2 / 2 - 1, len2 / 2 + 1).ToArray();
+            }
+            return GetMedianOfArrays(subArr1, subArr2);
+        }
+
+        private static double GetMedian(int[] arr)
+        {
+            double median;
+            int len = arr.Length;
+            if (len % 2 == 1)
+            {
+                median = arr[len / 2];
+            }
+            else
+            {
+                median = (arr[len / 2] + arr[len / 2 - 1]) / 2d;
+            }
+            return median;
+        }
+
+        //assumes sorted array with duplicates
+        public static int GetMagicIndexDups(int[] arr)
+        {
+            return GetMagicIndexDups(arr, 0, arr.Length - 1);
+        }
+
+        private static int GetMagicIndexDups(int[] arr, int start, int end)
+        {
+            if (start > end)
+            {
+                return -1;
+            }
+            int midIndex = (start + end) / 2;
+            int midVal = arr[midIndex];
+
+            int magicIndex;
+            if (midIndex == midVal)
+            {
+                magicIndex = midIndex;
+            }
+            else if (midIndex > midVal) //mid index is bigger than mid value
+            {
+                var possIndex = GetMagicIndexDups(arr, start, midVal);
+                //set the end index to the middle value, check the left side
+                if (possIndex == -1)
+                {
+                    magicIndex = GetMagicIndexDups(arr, midIndex + 1, end);
+                }
+                else
+                {
+                    magicIndex = possIndex;
+                }
+            }
+            else //mid index is smaller than mid value
+            {
+                var possIndex = GetMagicIndexDups(arr, midVal, end);
+                if (possIndex == -1)
+                {
+                    magicIndex = GetMagicIndexDups(arr, start, midIndex - 1);
+                }
+                else
+                {
+                    magicIndex = possIndex;
+                }
+            }
+            return magicIndex;
+        }
+
+        //assumes sorted array without duplicates
+        public static int GetMagicIndexNoDups(int[] arr)
+        {
+            return GetMagicIndexNoDups(arr, 0, arr.Length - 1);
+        }
+
+        //binary search style
+        private static int GetMagicIndexNoDups(int[] arr, int start, int end)
+        {
+            if (start > end)
+            {
+                return -1;
+            }
+
+            int midIndex = (start + end) / 2;
+            int midVal = arr[midIndex];
+            int magicIndex;
+            if (midVal == midIndex)
+            {
+                magicIndex = midIndex;
+            }
+            else if (midVal > midIndex) //search left side
+            {
+                magicIndex = GetMagicIndexNoDups(arr, start, midIndex-1);
+            }
+            else
+            {
+                magicIndex = GetMagicIndexNoDups(arr, midIndex + 1, end);
+            }
+            return magicIndex;
+        }
+
+        //index of current set value to be removed for next smaller set
+        public static List<List<int>> GetAllSubsets(List<int> set, int index)
+        {
+            //base case, return empty set
+            if (set.Count == index)
+            {
+                return new List<List<int>> { new List<int>() };
+            }
+
+            var smallSets = new List<List<int>>();
+            smallSets.AddRange(GetAllSubsets(set, index + 1));
+            int numRemoved = set[index];
+            var bigSets = new List<List<int>>();
+
+            foreach (var smallSet in smallSets)
+            {
+                var bigSet = new List<int>();
+                bigSet.AddRange(smallSet);
+                bigSet.Add(numRemoved);
+                bigSets.Add(bigSet);
+            }
+
+            smallSets.AddRange(bigSets);
+
+            //mc test for subset sum problem
+            //check if adds to sum
+            foreach (var s in smallSets)
+            {
+                var sum = 0;
+                foreach (var num in s)
+                {
+                    Debug.Write(num + ", ");
+                    sum += num;
+                }
+                Debug.WriteLine("sum: "+sum);
+            }
+
+            return smallSets;
+        }
+
+        //number of rows and columns in maze
+        public static int WaysToNavigateMaze(int[,] maze, int rows, int cols)
+        {
+            if (rows == 1 || cols == 1)
+            {
+                return 1;
+            }
+
+            int ways = WaysToNavigateMaze(maze, rows - 1, cols) +
+                WaysToNavigateMaze(maze, rows, cols - 1);
             return ways;
         }
 
@@ -108,6 +448,7 @@ namespace Algorithms
             }
             var first = str[0];
             var remainder = str.Substring(1);
+
 
             var permsRem = GetPerms(remainder);
             foreach (var permRem in permsRem)
