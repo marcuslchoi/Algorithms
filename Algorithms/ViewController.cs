@@ -31,6 +31,7 @@ namespace Algorithms
             }
 
             Debug.WriteLine(tree.MaxDepth(tree.root));
+            var ancestor = tree.LowestCommonAncestor(6,1);
             //tree.Insert(100);
             //tree.Insert(50);
             //tree.Insert(70);

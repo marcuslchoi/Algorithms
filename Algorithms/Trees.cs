@@ -240,6 +240,92 @@ namespace Algorithms
             return null;
         }
 
+        //BBB #18
+        //get the lowest common ancestor of two nodes
+        public TreeNode LowestCommonAncestor(int val1, int val2)
+        {
+            var parentDict = new Dictionary<TreeNode, TreeNode>();
+            //bfs
+            parentDict.Add(this.root, null);
+            var queue = new Queue<TreeNode>();
+            queue.Enqueue(this.root);
+
+            TreeNode node1 = null;
+            TreeNode node2 = null;
+
+            while (queue.Count > 0)
+            {
+                var curr = queue.Dequeue();
+                if (CheckNodeForVal(curr, val1))
+                {
+                    node1 = curr;
+                }
+                else if (CheckNodeForVal(curr, val2))
+                {
+                    node2 = curr;
+                }
+
+                if (node1 != null && node2 != null)
+                    break;
+
+                if (curr.Left != null)
+                {
+                    queue.Enqueue(curr.Left);
+                    parentDict.Add(curr.Left, curr);
+                    
+                }
+                if (curr.Right != null)
+                {
+                    queue.Enqueue(curr.Right);
+                    parentDict.Add(curr.Right, curr);
+                    
+                }
+            }
+
+            //get the ancestor of node1 and node2
+            var parent1Set = new HashSet<int>();
+            //put all parents of node1 in hashset
+
+            while (parentDict[node1] != null)
+            {
+                node1 = parentDict[node1];
+                parent1Set.Add(node1.Data);
+            }
+
+            while (parentDict[node2] != null)
+            {
+                node2 = parentDict[node2];
+                if (parent1Set.Contains(node2.Data))
+                {
+                    return node2;
+                }
+            }
+
+            //alt method for all numbers on lower levels are greater
+            //while (node1 != null && node2 != null)
+            //{
+            //    if (node1.Data < node2.Data)
+            //    {
+            //        node2 = parentDict[node2];
+            //    }
+            //    else if (node1.Data > node2.Data)
+            //    {
+            //        node1 = parentDict[node1];
+            //    }
+            //    else
+            //    {
+            //        //found!
+            //        return node1;
+            //    }
+            //}
+            return null;
+        }
+
+        private bool CheckNodeForVal(TreeNode node, int val)
+        {
+            return node.Data == val;
+        }
+
         public TreeNode Lookup(int val)
         {
             Debug.WriteLine("looking up value " + val);

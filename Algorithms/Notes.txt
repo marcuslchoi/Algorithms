@@ -5,6 +5,19 @@ both stored in the computer's RAM .
 Variables allocated on the stack are stored directly to the memory
 and access to this memory is very fast, and it's allocation is
 dealt with when the program is compiled.
+
+You can use the stack if you know exactly how much data you need
+to allocate before compile time and it is not too big.
+You can use heap if you don't know exactly how much data you
+will need at runtime or if you need to allocate a lot of data.
+
+
+In a multi-threaded situation each thread will have its
+own completely independent stack but they will share the heap.
+Stack is thread specific and Heap is application specific.
+The stack is important to consider in exception handling and thread executions.
+
+
 http://net-informations.com/faq/net/stack-heap.htm
 
 struct vs class:
