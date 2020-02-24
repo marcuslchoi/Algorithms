@@ -495,7 +495,6 @@ namespace Algorithms
             {
                 this.TraverseInOrder(node.Right, nums);
             }
-            //nums.Add(node.Data);
             return nums;
         }
 
@@ -506,7 +505,17 @@ namespace Algorithms
 
         private List<int> TraversePreOrder(TreeNode node, List<int> nums)
         {
-            return null;
+            nums.Add(node.Data);
+            if (node.Left != null)
+            {
+                this.TraversePreOrder(node.Left, nums);
+            }
+
+            if (node.Right != null)
+            {
+                this.TraversePreOrder(node.Right, nums);
+            }
+            return nums;
         }
 
         public List<int> DFSPostOrder()
@@ -516,12 +525,45 @@ namespace Algorithms
 
         private List<int> TraversePostOrder(TreeNode node, List<int> nums)
         {
-            return null;
+            if (node.Left != null)
+            {
+                this.TraversePostOrder(node.Left, nums);
+            }
+
+            if (node.Right != null)
+            {
+                this.TraversePostOrder(node.Right, nums);
+            }
+            nums.Add(node.Data);
+            return nums;
         }
 
-        public void Traverse()
+        //without recursion
+        public void TraverseInOrder()
         {
-            //todo use recursion
+            var stack = new Stack<TreeNode>();
+            this.AddLeftsToStack(this.root, stack);
+
+            while (stack.Count > 0)
+            {
+                var top = stack.Pop();
+                Debug.WriteLine("Traverse in order: "+top.Data);
+                if (top.Right != null)
+                {
+                    this.AddLeftsToStack(top.Right, stack);
+                }
+            }
+        }
+
+        private void AddLeftsToStack(TreeNode startNode, Stack<TreeNode> stack)
+        {
+            stack.Push(startNode);
+            var curr = startNode;
+            while (curr.Left != null)
+            {
+                curr = curr.Left;
+                stack.Push(curr);
+            }
         }
     }
 }
