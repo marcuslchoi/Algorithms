@@ -111,6 +111,10 @@ namespace Algorithms
         {
             base.ViewDidLoad();
 
+            //var str1 = LeetcodeApp.Compress("aaabbbcdeee");
+
+            //var combos = LeetcodeApp.GetAllParenthesisCombos("1|0&1");
+
             DoKthMostFrequentString();
             //DoShortestPathBBB16();
 

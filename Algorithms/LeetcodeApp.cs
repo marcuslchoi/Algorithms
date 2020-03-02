@@ -20,6 +20,84 @@ namespace Algorithms
 
     public class LeetcodeApp
     {
+        //#48 BBB string compression
+        public static string Compress(string str)
+        {
+            if (!CheckIfCompressShortens(str))
+                return str;
+
+            int i = str.Length - 1;
+            while (true)
+            {
+                int count = 0;
+                char currChar = str[i];
+                while (i >= 0 && str[i] == currChar)
+                {
+                    count++;
+                    i--;
+                }
+
+                str = str.Remove(i + 1, count);
+                str = str.Insert(i + 1, currChar.ToString() + count);
+
+                if (i < 0)
+                    break;
+            }
+            return str;
+        }
+
+        private static bool CheckIfCompressShortens(string str)
+        {
+            //each 1 char in a row lengthens compression by 1
+            //each char in a row more than 2 shortens by 1
+            int lengthIncrease = 0;
+            int i = 0;
+
+            while (true)
+            {
+                var currChar = str[i];
+                int count = 0;
+                while (i < str.Length && str[i] == currChar)
+                {
+                    count++;
+                    i++;
+                }
+
+                if (count == 1)
+                    lengthIncrease++;
+                else if (count > 2)
+                    lengthIncrease -= (count - 2);
+
+                if (i == str.Length)
+                    break;
+            }
+            return lengthIncrease < 0;
+        }
+
+        //#47 BBB longest common substring
+        public static string LongestCommonSubstring(string str1, string str2)
+        {
+            return null;
+        }
+
+        //this is wrong
+        public static List<string> GetAllParenthesisCombos(string str)
+        {
+            if (str.Length == 1)
+            {
+                return new List<string> { "(" + str + ")" };
+            }
+
+            //var combos = new List<string>();
+            var firstNumAndOp = str.Substring(0, 2);
+            var combos = GetAllParenthesisCombos(str.Substring(2));
+            for (int i = 0; i < combos.Count; i++)
+            {
+                combos[i] = firstNumAndOp + combos[i];
+            }
+            return combos;
+        }
+
         //#30 BBB
         //determine if a linked list is a palindrome
         //i.e., 1 -> 2 -> 3 -> 2 -> 1 is true
