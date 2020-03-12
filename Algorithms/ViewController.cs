@@ -111,6 +111,12 @@ namespace Algorithms
         {
             base.ViewDidLoad();
 
+            var threeSumList = new List<int> { -1,0,1,2,-1,-4 }; 
+            var sets = BBB.ThreeSum(threeSumList);
+
+            var set = new HashSet<string> { "a", "aa", "aaa" };
+            var strDeletion = LeetcodeApp.StringDeletion("abaacdefa", set);
+
             //var str1 = LeetcodeApp.Compress("aaabbbcdeee");
 
             //var combos = LeetcodeApp.GetAllParenthesisCombos("1|0&1");

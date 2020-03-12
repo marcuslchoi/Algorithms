@@ -74,7 +74,32 @@ namespace Algorithms
             return lengthIncrease < 0;
         }
 
-        //#47 BBB longest common substring
+        //#46 BBB
+        public static int StringDeletion(string str, HashSet<string> set)
+        {
+            //get all subsets of str, put in tree, breadth first search
+            var q = new Queue<string>();
+            q.Enqueue(str);
+
+            while (q.Count > 0)
+            {
+                var curr = q.Dequeue();
+
+                if (set.Contains(curr))
+                    return str.Length - curr.Length;
+                else if (curr.Length > 1)
+                {
+                    for (int i = 0; i < curr.Length; i++)
+                    {
+                        q.Enqueue(curr.Remove(i, 1));
+                    }
+                }
+            }
+
+            return -1;
+        }
+
+        //TODO!!! #47 BBB longest common substring
         public static string LongestCommonSubstring(string str1, string str2)
         {
             return null;

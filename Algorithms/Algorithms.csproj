@@ -87,6 +87,8 @@
     <Compile Include="MyMath.cs" />
     <Compile Include="LeetcodeApp.cs" />
     <Compile Include="Graphs.cs" />
+    <Compile Include="Test.cs" />
+    <Compile Include="BBB.cs" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="Main.storyboard" />
