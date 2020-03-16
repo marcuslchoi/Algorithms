@@ -107,10 +107,38 @@ namespace Algorithms
 
         }
 
+        private void DoBuildOrder()
+        {
+            var processes = new List<List<int>> { new List<int> { },
+                                                new List<int> { 0},
+                                                new List<int> {0 },
+                                                new List<int> { 1,2 },
+                                                new List<int> {5 },
+                                                new List<int> {3 }};
+            var order = BBB.BuildOrder(processes);
+
+        }
+
+        private void DoRemoveDuplicates()
+        {
+            var list = new DoublyLinkedList(1);
+            list.Append(2);
+            list.Append(3);
+            list.Append(2);
+            list.Append(1);
+            list.Append(3);
+            list.Append(1);
+            list.Append(14);
+            list.Append(5);
+            list.Append(3);
+            BBB.RemoveDuplicates(list.Head);
+        }
+
         public override void ViewDidLoad()
         {
             base.ViewDidLoad();
-
+            this.DoRemoveDuplicates();
+            this.DoBuildOrder();
             var threeSumList = new List<int> { -1,0,1,2,-1,-4 }; 
             var sets = BBB.ThreeSum(threeSumList);
 
